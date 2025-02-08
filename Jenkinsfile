@@ -1,26 +1,32 @@
-pipeline
-{
-agent any
-stages
-{
-  stage ('scm checkout')
-   {steps { echo "hello" }}
+pipeline {
+    agent any
 
-  stage ('execute unit test')
-  {steps { echo "second"
-  }}
-
-  stage ('code build')
-  {steps { echo "third"
-  }}
-
-  stage ('create docker image')
-  {steps { sh 'docker build -t mynewimage .' }
-  }
-
-  
-
-
-
+    stages {
+        stage('SCM Checkout') {
+            steps {
+                git 'https://github.com/satish13aaru/maven-project.git'
+            }
+        }
+        stage('Validate') {
+            steps {
+                withMaven(globalMavenSettingsConfig: '', jdk: 'JAVA_HOME', maven: 'MVN_HOME', mavenSettingsConfig: '', traceability: true) {
+                sh 'mvn validate'
 }
+            }
+        }
+        stage('Compile') {
+            steps {
+                withMaven(globalMavenSettingsConfig: '', jdk: 'JAVA_HOME', maven: 'MVN_HOME', mavenSettingsConfig: '', traceability: true) {
+                sh 'mvn compile'
+}
+            }
+        }
+        stage('Build Package') {
+            steps {
+                withMaven(globalMavenSettingsConfig: '', jdk: 'JAVA_HOME', maven: 'MVN_HOME', mavenSettingsConfig: '', traceability: true) {
+                sh 'mvn package'
+}
+            }
+        }
+    }
 }
