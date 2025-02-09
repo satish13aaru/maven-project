@@ -29,7 +29,7 @@ pipeline {
             }
         }
         //CD Part
-        stage('Build Package') {
+        stage('Deploy') {
             steps {
                 sshagent(['DEVCICD']) {
                 sh 'scp -o StrictHostKeyChecking=no webapp/target/webapp.war ec2-user@172.31.9.94:/usr/share/tomcat/webapps'
